@@ -1,14 +1,13 @@
 import React from 'react';
-import ControlBurn from './ControlBurn';
+import FhirAppHome from './componants/jsx/FhirAppHome';
 
 function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>FHIR Editor Application</h1>
             </header>
             <main>
-                <ControlBurn />
+                <FhirAppHome />
             </main>
         </div>
     );
