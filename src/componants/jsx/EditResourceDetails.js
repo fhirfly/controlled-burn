@@ -78,7 +78,7 @@ const EditResourceDetails = ({ selectedType, fhirData }) => {
         }
 
         fetch('https://your-api-endpoint/update', {
-            method: 'POST',
+            method: 'UPDATE',
             headers: {
                 'Content-Type': 'application/json'
             },

@@ -1,6 +1,7 @@
 import React from 'react';
 import FhirAppHome from './componants/jsx/FhirAppHome';
 import EditResource from './componants/jsx/EditResource';
+import AddResources from './componants/jsx/AddResources';
 
 function App() {
     return (
@@ -9,6 +10,10 @@ function App() {
             </header>
             <main>
                 <FhirAppHome />
+                <br />
+                <hr />
+                <br />
+                <AddResources />
                 <br />
                 <hr />
                 <br />
