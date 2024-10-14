@@ -3,73 +3,211 @@ import '../css/AddResources.css';
 
 const AddResources = () => {
     const [formData, setFormData] = useState({
-        fullUrl: '',
+        fullUrl: "",
         resource: {
-            resourceType: '',
-            id: '',
-            meta: { lastUpdated: '' },
-            text: { status: '', div: '' },
-            extension: [{ url: '', valueCode: '' }],
-            url: '',
-            version: '',
-            name: '',
-            status: '',
-            date: '',
-            publisher: '',
-            description: '',
-            fhirVersion: '',
-            kind: '',
-            abstract: false,
-            type: '',
-            baseDefinition: '',
-            derivation: '',
+            resourceType: "",
+            id: "",
+            meta: {
+                lastUpdated: ""
+            },
+            text: {
+                status: "",
+                div: ""
+            },
+            extension: [
+                {
+                    url: "",
+                    valueCode: ""
+                }
+            ],
+            url: "",
+            version: "",
+            name: "",
+            status: "",
+            date: "",
+            publisher: "",
+            contact: [
+                {
+                    telecom: [
+                        {
+                            system: "",
+                            value: ""
+                        }
+                    ]
+                }
+            ],
+            description: "",
+            fhirVersion: "",
+            mapping: [
+                {
+                    identity: "",
+                    uri: "",
+                    name: ""
+                }
+            ],
+            kind: "",
+            abstract: true,
+            type: "",
+            baseDefinition: "",
+            derivation: "",
             snapshot: {
-                element: [{ id: '', path: '', short: '', definition: '', min: '', max: '' }]
+                element: [
+                    {
+                        id: "",
+                        extension: [
+                            {
+                                url: "",
+                                valueCode: ""
+                            }
+                        ],
+                        path: "",
+                        short: "",
+                        definition: "",
+                        min: "",
+                        max: "",
+                        base: {
+                            path: "Element",
+                            min: 0,
+                            max: ""
+                        },
+                        condition: [""],
+                        constraint: [
+                            {
+                                key: "",
+                                severity: "",
+                                human: "",
+                                expression: "",
+                                xpath: " ",
+                                source: ""
+                            }
+                        ],
+                        isModifier: false,
+                        mapping: [
+                            {
+                                identity: "",
+                                map: ""
+                            }
+                        ]
+                    }
+                ]
             },
             differential: {
-                element: [{ id: '', path: '', short: '', definition: '', min: '', max: '' }]
+                element: [
+                    {
+                        id: "",
+                        extension: [
+                            {
+                                url: "",
+                                valueCode: ""
+                            }
+                        ],
+                        path: "",
+                        short: "",
+                        definition: "",
+                        min: "",
+                        max: "",
+                        condition: [""],
+                        constraint: [
+                            {
+                                key: "",
+                                severity: "",
+                                human: "",
+                                expression: "",
+                                xpath: " ",
+                                source: ""
+                            }
+                        ],
+                        mapping: [
+                            {
+                                identity: "",
+                                map: ""
+                            }
+                        ]
+                    }
+                ]
             }
         }
     });
 
-    // Handle changes for top-level fields
-    const handleInputChange = (e) => {
+
+    const addExtensionToSnapshot = (index) => {
+        const updatedSnapshot = [...formData.resource.snapshot.element];
+        if (!updatedSnapshot[index].extension) {
+            updatedSnapshot[index].extension = []; // Ensure the extension array exists
+        }
+        updatedSnapshot[index].extension.push({ url: "", valueCode: "" });
+        setFormData({ ...formData, resource: { ...formData.resource, snapshot: { element: updatedSnapshot } } });
+    };
+
+    const handleNestedChange = (event, name) => {
+        const { value } = event.target;
+        const keys = name.split(".");
+        const lastKey = keys.pop();
+        let obj = formData;
+
+        keys.forEach(key => {
+            if (!obj[key]) {
+                obj[key] = {};
+            }
+            obj = obj[key];
+        });
+
+        obj[lastKey] = value;
+        setFormData({ ...formData });
+    };
+
+
+    // Add the submit handler for form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Make the POST request
+        fetch('https://example.com/api/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Form data submitted:", data);
+                alert('Form submitted successfully!');
+
+                // Reset the form
+                e.target.reset();
+
+            })
+            .catch(error => {
+                console.error("Error submitting form:", error);
+                alert('Your form submissions are working fine, but the database is currently not connected. We apologize for the inconvenience.');
+                // Reset the form
+                e.target.reset();
+            });
+
+        // Log form data to console
+        console.log("Submitted data:", formData);
+    };
+
+
+
+    // Helper functions for updating the state
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Handle changes for nested inputs
-    const handleNestedInputChange = (e, path) => {
-        const { name, value } = e.target;
-        const keys = path.split('.');
-        setFormData((prev) => {
-            let nestedObj = { ...prev };
-            let current = nestedObj;
-
-            keys.forEach((key, index) => {
-                if (index === keys.length - 1) {
-                    current[key] = value;
-                } else {
-                    current = current[key];
-                }
-            });
-
-            return nestedObj;
-        });
-    };
-
-    // Add a new extension
+    // Functions for adding and removing groups
     const addExtension = () => {
         setFormData((prev) => ({
             ...prev,
             resource: {
                 ...prev.resource,
-                extension: [...prev.resource.extension, { url: '', valueCode: '' }]
+                extension: [...prev.resource.extension, { url: "", valueCode: "" }]
             }
         }));
     };
 
-    // Remove an extension
     const removeExtension = (index) => {
         setFormData((prev) => ({
             ...prev,
@@ -80,427 +218,567 @@ const AddResources = () => {
         }));
     };
 
-    // Add a new snapshot element
-    const addSnapshotElement = () => {
+    const addContact = () => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                contact: [...prev.resource.contact, { telecom: [{ system: "", value: "" }] }]
+            }
+        }));
+    };
+
+    const removeContact = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                contact: prev.resource.contact.filter((_, i) => i !== index)
+            }
+        }));
+    };
+
+    const addMapping = () => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                mapping: [...prev.resource.mapping, { identity: "", uri: "", name: "" }]
+            }
+        }));
+    };
+
+    const removeMapping = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                mapping: prev.resource.mapping.filter((_, i) => i !== index)
+            }
+        }));
+    };
+
+    const addElementToSnapshot = () => {
         setFormData((prev) => ({
             ...prev,
             resource: {
                 ...prev.resource,
                 snapshot: {
                     ...prev.resource.snapshot,
-                    element: [...prev.resource.snapshot.element, { id: '', path: '', short: '', definition: '', min: '', max: '' }]
+                    element: [...prev.resource.snapshot.element, { id: "", extension: [{ url: "", valueCode: "" }], path: "", short: "", definition: "", min: "", max: "", base: { path: "Element", min: 0, max: "" }, condition: [""], constraint: [{ key: "", severity: "", human: "", expression: "", xpath: " ", source: "" }], isModifier: false, mapping: [{ identity: "", map: "" }] }]
                 }
             }
         }));
     };
 
-    // Handle changes for snapshot elements
-    const handleSnapshotElementChange = (index, e) => {
-        const { name, value } = e.target;
+    const removeElementFromSnapshot = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                snapshot: {
+                    ...prev.resource.snapshot,
+                    element: prev.resource.snapshot.element.filter((_, i) => i !== index)
+                }
+            }
+        }));
+    };
+
+    const addConditionToSnapshot = (index) => {
         setFormData((prev) => {
             const newElement = [...prev.resource.snapshot.element];
-            newElement[index][name] = value;
+            newElement[index].condition.push("");
             return { ...prev, resource: { ...prev.resource, snapshot: { ...prev.resource.snapshot, element: newElement } } };
         });
     };
 
-    // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form data submitted:', formData);
-        // Here you would send the form data as a POST request to your server
+    const removeConditionFromSnapshot = (elementIndex, conditionIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.snapshot.element];
+            newElement[elementIndex].condition = newElement[elementIndex].condition.filter((_, i) => i !== conditionIndex);
+            return { ...prev, resource: { ...prev.resource, snapshot: { ...prev.resource.snapshot, element: newElement } } };
+        });
+    };
+
+    const addConstraintToSnapshot = (index) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.snapshot.element];
+            newElement[index].constraint.push({ key: "", severity: "", human: "", expression: "", xpath: " ", source: "" });
+            return { ...prev, resource: { ...prev.resource, snapshot: { ...prev.resource.snapshot, element: newElement } } };
+        });
+    };
+
+    const removeConstraintFromSnapshot = (elementIndex, constraintIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.snapshot.element];
+            newElement[elementIndex].constraint = newElement[elementIndex].constraint.filter((_, i) => i !== constraintIndex);
+            return { ...prev, resource: { ...prev.resource, snapshot: { ...prev.resource.snapshot, element: newElement } } };
+        });
+    };
+
+    const addMappingToSnapshot = (elementIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.snapshot.element];
+            newElement[elementIndex].mapping.push({ identity: "", map: "" });
+            return { ...prev, resource: { ...prev.resource, snapshot: { ...prev.resource.snapshot, element: newElement } } };
+        });
+    };
+
+    const removeMappingFromSnapshot = (elementIndex, mappingIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.snapshot.element];
+            newElement[elementIndex].mapping = newElement[elementIndex].mapping.filter((_, i) => i !== mappingIndex);
+            return { ...prev, resource: { ...prev.resource, snapshot: { ...prev.resource.snapshot, element: newElement } } };
+        });
+    };
+
+    const addElementToDifferential = () => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                differential: {
+                    ...prev.resource.differential,
+                    element: [...prev.resource.differential.element, { id: "", extension: [{ url: "", valueCode: "" }], path: "", short: "", definition: "", min: "", max: "", condition: [""], constraint: [{ key: "", severity: "", human: "", expression: "", xpath: " ", source: "" }], mapping: [{ identity: "", map: "" }] }]
+                }
+            }
+        }));
+    };
+
+    const removeElementFromDifferential = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            resource: {
+                ...prev.resource,
+                differential: {
+                    ...prev.resource.differential,
+                    element: prev.resource.differential.element.filter((_, i) => i !== index)
+                }
+            }
+        }));
+    };
+
+    const addConditionToDifferential = (index) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.differential.element];
+            newElement[index].condition.push("");
+            return { ...prev, resource: { ...prev.resource, differential: { ...prev.resource.differential, element: newElement } } };
+        });
+    };
+
+    const removeConditionFromDifferential = (elementIndex, conditionIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.differential.element];
+            newElement[elementIndex].condition = newElement[elementIndex].condition.filter((_, i) => i !== conditionIndex);
+            return { ...prev, resource: { ...prev.resource, differential: { ...prev.resource.differential, element: newElement } } };
+        });
+    };
+
+    const addConstraintToDifferential = (index) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.differential.element];
+            newElement[index].constraint.push({ key: "", severity: "", human: "", expression: "", xpath: " ", source: "" });
+            return { ...prev, resource: { ...prev.resource, differential: { ...prev.resource.differential, element: newElement } } };
+        });
+    };
+
+    const removeConstraintFromDifferential = (elementIndex, constraintIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.differential.element];
+            newElement[elementIndex].constraint = newElement[elementIndex].constraint.filter((_, i) => i !== constraintIndex);
+            return { ...prev, resource: { ...prev.resource, differential: { ...prev.resource.differential, element: newElement } } };
+        });
+    };
+
+    const addMappingToDifferential = (elementIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.differential.element];
+            newElement[elementIndex].mapping.push({ identity: "", map: "" });
+            return { ...prev, resource: { ...prev.resource, differential: { ...prev.resource.differential, element: newElement } } };
+        });
+    };
+
+    const removeMappingFromDifferential = (elementIndex, mappingIndex) => {
+        setFormData((prev) => {
+            const newElement = [...prev.resource.differential.element];
+            newElement[elementIndex].mapping = newElement[elementIndex].mapping.filter((_, i) => i !== mappingIndex);
+            return { ...prev, resource: { ...prev.resource, differential: { ...prev.resource.differential, element: newElement } } };
+        });
     };
 
     return (
-        <div className="add-resources">
-            <h2>Add Resources</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="form-container">
+            <form onSubmit={handleSubmit} className="">
                 <label>
                     Full URL:
-                    <input
-                        type="text"
-                        name="fullUrl"
-                        value={formData.fullUrl}
-                        onChange={handleInputChange}
-                        placeholder="Enter full URL"
-                    />
+                    <input type="text" name="fullUrl" onChange={handleChange} />
                 </label>
-
-                <label>
-                    Resource Type:
-                    <input
-                        type="text"
-                        name="resource.resourceType"
-                        value={formData.resource.resourceType}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource type"
-                    />
-                </label>
-
-                <label>
-                    Resource ID:
-                    <input
-                        type="text"
-                        name="resource.id"
-                        value={formData.resource.id}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource ID"
-                    />
-                </label>
-
-                <label>
-                    Last Updated:
-                    <input
-                        type="datetime-local"
-                        name="resource.meta.lastUpdated"
-                        value={formData.resource.meta.lastUpdated}
-                        onChange={(e) => handleNestedInputChange(e, 'resource.meta')}
-                    />
-                </label>
-
-                <label>
-                    Text Status:
-                    <input
-                        type="text"
-                        name="resource.text.status"
-                        value={formData.resource.text.status}
-                        onChange={(e) => handleNestedInputChange(e, 'resource.text')}
-                        placeholder="Enter text status"
-                    />
-                </label>
-
-                <label>
-                    Text Div:
-                    <textarea
-                        name="resource.text.div"
-                        value={formData.resource.text.div}
-                        onChange={(e) => handleNestedInputChange(e, 'resource.text')}
-                        placeholder="Enter text div"
-                    />
-                </label>
-
-                <label>
-                    Extensions:
-                    <button type="button" className="add-btn" onClick={addExtension}>Add Extension</button>
-                    {formData.resource.extension.map((ext, index) => (
-                        <div key={index} className="nested-fieldset">
-                            <input
-                                type="text"
-                                placeholder="Extension URL"
-                                value={ext.url}
-                                onChange={(e) => {
-                                    const newExt = [...formData.resource.extension];
-                                    newExt[index].url = e.target.value;
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        resource: {
-                                            ...prev.resource,
-                                            extension: newExt,
-                                        },
-                                    }));
-                                }}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Extension Value Code"
-                                value={ext.valueCode}
-                                onChange={(e) => {
-                                    const newExt = [...formData.resource.extension];
-                                    newExt[index].valueCode = e.target.value;
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        resource: {
-                                            ...prev.resource,
-                                            extension: newExt,
-                                        },
-                                    }));
-                                }}
-                            />
-                            <button type="button" className="remove-btn" onClick={() => removeExtension(index)}>Remove</button>
-                        </div>
-                    ))}
-                </label>
-
-                <label>
-                    URL:
-                    <input
-                        type="text"
-                        name="resource.url"
-                        value={formData.resource.url}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource URL"
-                    />
-                </label>
-
-                <label>
-                    Version:
-                    <input
-                        type="text"
-                        name="resource.version"
-                        value={formData.resource.version}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource version"
-                    />
-                </label>
-
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="resource.name"
-                        value={formData.resource.name}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource name"
-                    />
-                </label>
-
-                <label>
-                    Status:
-                    <input
-                        type="text"
-                        name="resource.status"
-                        value={formData.resource.status}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource status"
-                    />
-                </label>
-
-                <label>
-                    Date:
-                    <input
-                        type="datetime-local"
-                        name="resource.date"
-                        value={formData.resource.date}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                    />
-                </label>
-
-                <label>
-                    Publisher:
-                    <input
-                        type="text"
-                        name="resource.publisher"
-                        value={formData.resource.publisher}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter publisher name"
-                    />
-                </label>
-
-                <label>
-                    Description:
-                    <textarea
-                        name="resource.description"
-                        value={formData.resource.description}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource description"
-                    />
-                </label>
-
-                <label>
-                    FHIR Version:
-                    <input
-                        type="text"
-                        name="resource.fhirVersion"
-                        value={formData.resource.fhirVersion}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter FHIR version"
-                    />
-                </label>
-
-                <label>
-                    Kind:
-                    <input
-                        type="text"
-                        name="resource.kind"
-                        value={formData.resource.kind}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter kind"
-                    />
-                </label>
-
-                <label>
-                    Abstract:
-                    <input
-                        type="checkbox"
-                        name="resource.abstract"
-                        checked={formData.resource.abstract}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                    />
-                </label>
-
-                <label>
-                    Type:
-                    <input
-                        type="text"
-                        name="resource.type"
-                        value={formData.resource.type}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter resource type"
-                    />
-                </label>
-
-                <label>
-                    Base Definition:
-                    <input
-                        type="text"
-                        name="resource.baseDefinition"
-                        value={formData.resource.baseDefinition}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter base definition"
-                    />
-                </label>
-
-                <label>
-                    Derivation:
-                    <input
-                        type="text"
-                        name="resource.derivation"
-                        value={formData.resource.derivation}
-                        onChange={(e) => handleNestedInputChange(e, 'resource')}
-                        placeholder="Enter derivation"
-                    />
-                </label>
-
                 <fieldset>
-                    <legend>Snapshot</legend>
-                    <button type="button" className="add-btn" onClick={addSnapshotElement}>Add Snapshot Element</button>
-                    {formData.resource.snapshot.element.map((element, index) => (
-                        <div key={index} className="nested-fieldset">
-                            <label>
-                                Element ID:
-                                <input
-                                    type="text"
-                                    name="id"
-                                    value={element.id}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element ID"
-                                />
-                            </label>
-                            <label>
-                                Element Path:
-                                <input
-                                    type="text"
-                                    name="path"
-                                    value={element.path}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element path"
-                                />
-                            </label>
-                            <label>
-                                Element Short:
-                                <input
-                                    type="text"
-                                    name="short"
-                                    value={element.short}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element short"
-                                />
-                            </label>
-                            <label>
-                                Element Definition:
-                                <textarea
-                                    name="definition"
-                                    value={element.definition}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element definition"
-                                />
-                            </label>
-                            <label>
-                                Element Min:
-                                <input
-                                    type="text"
-                                    name="min"
-                                    value={element.min}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter min value"
-                                />
-                            </label>
-                            <label>
-                                Element Max:
-                                <input
-                                    type="text"
-                                    name="max"
-                                    value={element.max}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter max value"
-                                />
-                            </label>
-                        </div>
-                    ))}
-                </fieldset>
+                    <legend>Resource</legend>
+                    <label>
+                        Resource Type:
+                        <input type="text" name="resource.resourceType" onChange={(e) => handleNestedChange(e, 'resource.resourceType')} />
+                    </label>
+                    <label>
+                        ID:
+                        <input type="text" name="resource.id" onChange={(e) => handleNestedChange(e, 'resource.id')} />
+                    </label>
+                    <fieldset>
+                        <legend>Meta</legend>
+                        <label>
+                            Last Updated:
+                            <input type="text" name="resource.meta.lastUpdated" onChange={(e) => handleNestedChange(e, 'resource.meta.lastUpdated')} />
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Text</legend>
+                        <label>
+                            Status:
+                            <input type="text" name="resource.text.status" onChange={(e) => handleNestedChange(e, 'resource.text.status')} />
+                        </label>
+                        <label>
+                            Div:
+                            <input type="text" name="resource.text.div" onChange={(e) => handleNestedChange(e, 'resource.text.div')} />
+                        </label>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>Differential</legend>
-                    <button type="button" className="add-btn" onClick={addSnapshotElement}>Add Differential Element</button>
-                    {formData.resource.differential.element.map((element, index) => (
-                        <div key={index} className="nested-fieldset">
-                            <label>
-                                Element ID:
-                                <input
-                                    type="text"
-                                    name="id"
-                                    value={element.id}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element ID"
-                                />
-                            </label>
-                            <label>
-                                Element Path:
-                                <input
-                                    type="text"
-                                    name="path"
-                                    value={element.path}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element path"
-                                />
-                            </label>
-                            <label>
-                                Element Short:
-                                <input
-                                    type="text"
-                                    name="short"
-                                    value={element.short}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element short"
-                                />
-                            </label>
-                            <label>
-                                Element Definition:
-                                <textarea
-                                    name="definition"
-                                    value={element.definition}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter element definition"
-                                />
-                            </label>
-                            <label>
-                                Element Min:
-                                <input
-                                    type="text"
-                                    name="min"
-                                    value={element.min}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter min value"
-                                />
-                            </label>
-                            <label>
-                                Element Max:
-                                <input
-                                    type="text"
-                                    name="max"
-                                    value={element.max}
-                                    onChange={(e) => handleSnapshotElementChange(index, e)}
-                                    placeholder="Enter max value"
-                                />
-                            </label>
-                        </div>
-                    ))}
-                </fieldset>
+                    <fieldset>
+                        <legend>Extensions</legend>
+                        {formData.resource.extension.map((ext, index) => (
+                            <div key={index}>
+                                <label>
+                                    URL:
+                                    <input type="text" name={`resource.extension[${index}].url`} onChange={(e) => handleNestedChange(e, `resource.extension[${index}].url`)} />
+                                </label>
+                                <label>
+                                    Value Code:
+                                    <input type="text" name={`resource.extension[${index}].valueCode`} onChange={(e) => handleNestedChange(e, `resource.extension[${index}].valueCode`)} />
+                                </label>
+                                <button type="button" onClick={() => removeExtension(index)}>Remove Extension</button>
+                            </div>
+                        ))}
+                        <button type="button" onClick={addExtension}>Add Extension</button>
+                    </fieldset>
 
-                <button type="submit" className="submit-btn">Submit</button>
+                    <label>
+                        URL:
+                        <input type="text" name="resource.url" onChange={(e) => handleNestedChange(e, 'resource.url')} />
+                    </label>
+                    <label>
+                        Version:
+                        <input type="text" name="resource.version" onChange={(e) => handleNestedChange(e, 'resource.version')} />
+                    </label>
+                    <label>
+                        Name:
+                        <input type="text" name="resource.name" onChange={(e) => handleNestedChange(e, 'resource.name')} />
+                    </label>
+                    <label>
+                        Status:
+                        <input type="text" name="resource.status" onChange={(e) => handleNestedChange(e, 'resource.status')} />
+                    </label>
+                    <label>
+                        Date:
+                        <input type="text" name="resource.date" onChange={(e) => handleNestedChange(e, 'resource.date')} />
+                    </label>
+                    <label>
+                        Publisher:
+                        <input type="text" name="resource.publisher" onChange={(e) => handleNestedChange(e, 'resource.publisher')} />
+                    </label>
+
+                    <fieldset>
+                        <legend>Contact</legend>
+                        {formData.resource.contact.map((contact, index) => (
+                            <div key={index}>
+                                <fieldset>
+                                    <legend>Contact {index + 1}</legend>
+                                    {contact.telecom.map((telecom, telecomIndex) => (
+                                        <div key={telecomIndex}>
+                                            <label>
+                                                System:
+                                                <input type="text" name={`resource.contact[${index}].telecom[${telecomIndex}].system`} onChange={(e) => handleNestedChange(e, `resource.contact[${index}].telecom[${telecomIndex}].system`)} />
+                                            </label>
+                                            <label>
+                                                Value:
+                                                <input type="text" name={`resource.contact[${index}].telecom[${telecomIndex}].value`} onChange={(e) => handleNestedChange(e, `resource.contact[${index}].telecom[${telecomIndex}].value`)} />
+                                            </label>
+                                        </div>
+                                    ))}
+                                    <button type="button" onClick={addContact}>Add Contact</button>
+                                    <button type="button" onClick={() => removeContact(index)}>Remove Contact</button>
+                                </fieldset>
+                            </div>
+                        ))}
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Mappings</legend>
+                        {formData.resource.mapping.map((map, index) => (
+                            <div key={index}>
+                                <label>
+                                    Identity:
+                                    <input type="text" name={`resource.mapping[${index}].identity`} onChange={(e) => handleNestedChange(e, `resource.mapping[${index}].identity`)} />
+                                </label>
+                                <label>
+                                    URI:
+                                    <input type="text" name={`resource.mapping[${index}].uri`} onChange={(e) => handleNestedChange(e, `resource.mapping[${index}].uri`)} />
+                                </label>
+                                <label>
+                                    Name:
+                                    <input type="text" name={`resource.mapping[${index}].name`} onChange={(e) => handleNestedChange(e, `resource.mapping[${index}].name`)} />
+                                </label>
+                                <button type="button" onClick={() => removeMapping(index)}>Remove Mapping</button>
+                            </div>
+                        ))}
+                        <button type="button" onClick={addMapping}>Add Mapping</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Snapshot</legend>
+                        {formData.resource.snapshot.element.map((element, index) => (
+                            <div key={index}>
+                                <fieldset>
+                                    <legend>Element</legend>
+                                    <label>
+                                        ID:
+                                        <input type="text" name={`resource.snapshot.element[${index}].id`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].id`)} />
+                                    </label>
+
+                                    <fieldset>
+                                        <legend>Extension</legend>
+                                        {element.extension.map((ext, extIndex) => (
+                                            <div key={extIndex}>
+                                                <label>
+                                                    URL:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].extension[${extIndex}].url`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].extension[${extIndex}].url`)} />
+                                                </label>
+                                                <label>
+                                                    Value Code:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].extension[${extIndex}].valueCode`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].extension[${extIndex}].valueCode`)} />
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </fieldset>
+
+                                    <label>
+                                        Path:
+                                        <input type="text" name={`resource.snapshot.element[${index}].path`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].path`)} />
+                                    </label>
+                                    <label>
+                                        Short:
+                                        <input type="text" name={`resource.snapshot.element[${index}].short`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].short`)} />
+                                    </label>
+                                    <label>
+                                        Definition:
+                                        <input type="text" name={`resource.snapshot.element[${index}].definition`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].definition`)} />
+                                    </label>
+                                    <label>
+                                        Min:
+                                        <input type="text" name={`resource.snapshot.element[${index}].min`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].min`)} />
+                                    </label>
+                                    <label>
+                                        Max:
+                                        <input type="text" name={`resource.snapshot.element[${index}].max`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].max`)} />
+                                    </label>
+
+                                    <fieldset>
+                                        <legend>Condition</legend>
+                                        {element.condition.map((cond, condIndex) => (
+                                            <div key={condIndex}>
+                                                <label>
+                                                    Condition:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].condition[${condIndex}]`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].condition[${condIndex}]`)} />
+                                                </label>
+                                                <button type="button" onClick={() => removeConditionFromSnapshot(index, condIndex)}>Remove Condition</button>
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={() => addConditionToSnapshot(index)}>Add Condition</button>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>Constraints</legend>
+                                        {element.constraint.map((constr, constrIndex) => (
+                                            <div key={constrIndex}>
+                                                <label>
+                                                    Key:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].constraint[${constrIndex}].key`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].constraint[${constrIndex}].key`)} />
+                                                </label>
+                                                <label>
+                                                    Severity:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].constraint[${constrIndex}].severity`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].constraint[${constrIndex}].severity`)} />
+                                                </label>
+                                                <label>
+                                                    Human:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].constraint[${constrIndex}].human`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].constraint[${constrIndex}].human`)} />
+                                                </label>
+                                                <label>
+                                                    Expression:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].constraint[${constrIndex}].expression`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].constraint[${constrIndex}].expression`)} />
+                                                </label>
+                                                <label>
+                                                    XPath:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].constraint[${constrIndex}].xpath`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].constraint[${constrIndex}].xpath`)} />
+                                                </label>
+                                                <label>
+                                                    Source:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].constraint[${constrIndex}].source`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].constraint[${constrIndex}].source`)} />
+                                                </label>
+                                                <button type="button" onClick={() => removeConstraintFromSnapshot(index, constrIndex)}>Remove Constraint</button>
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={() => addConstraintToSnapshot(index)}>Add Constraint</button>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>Mapping</legend>
+                                        {element.mapping.map((map, mapIndex) => (
+                                            <div key={mapIndex}>
+                                                <label>
+                                                    Identity:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].mapping[${mapIndex}].identity`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].mapping[${mapIndex}].identity`)} />
+                                                </label>
+                                                <label>
+                                                    Map:
+                                                    <input type="text" name={`resource.snapshot.element[${index}].mapping[${mapIndex}].map`} onChange={(e) => handleNestedChange(e, `resource.snapshot.element[${index}].mapping[${mapIndex}].map`)} />
+                                                </label>
+                                                <button type="button" onClick={() => removeMappingFromSnapshot(index, mapIndex)}>Remove Mapping</button>
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={() => addMappingToSnapshot(index)}>Add Mapping</button>
+                                    </fieldset>
+
+                                    <button type="button" onClick={() => removeElementFromSnapshot(index)}>Remove Element</button>
+                                </fieldset>
+                            </div>
+                        ))}
+                        <button type="button" onClick={addElementToSnapshot}>Add Element</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Differential</legend>
+                        {formData.resource.differential.element.map((element, index) => (
+                            <div key={index}>
+                                <fieldset>
+                                    <legend>Element</legend>
+                                    <label>
+                                        ID:
+                                        <input type="text" name={`resource.differential.element[${index}].id`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].id`)} />
+                                    </label>
+
+                                    <fieldset>
+                                        <legend>Extension</legend>
+                                        {element.extension.map((ext, extIndex) => (
+                                            <div key={extIndex}>
+                                                <label>
+                                                    URL:
+                                                    <input type="text" name={`resource.differential.element[${index}].extension[${extIndex}].url`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].extension[${extIndex}].url`)} />
+                                                </label>
+                                                <label>
+                                                    Value Code:
+                                                    <input type="text" name={`resource.differential.element[${index}].extension[${extIndex}].valueCode`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].extension[${extIndex}].valueCode`)} />
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </fieldset>
+
+                                    <label>
+                                        Path:
+                                        <input type="text" name={`resource.differential.element[${index}].path`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].path`)} />
+                                    </label>
+                                    <label>
+                                        Short:
+                                        <input type="text" name={`resource.differential.element[${index}].short`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].short`)} />
+                                    </label>
+                                    <label>
+                                        Definition:
+                                        <input type="text" name={`resource.differential.element[${index}].definition`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].definition`)} />
+                                    </label>
+                                    <label>
+                                        Min:
+                                        <input type="text" name={`resource.differential.element[${index}].min`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].min`)} />
+                                    </label>
+                                    <label>
+                                        Max:
+                                        <input type="text" name={`resource.differential.element[${index}].max`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].max`)} />
+                                    </label>
+
+                                    <fieldset>
+                                        <legend>Condition</legend>
+                                        {element.condition.map((cond, condIndex) => (
+                                            <div key={condIndex}>
+                                                <label>
+                                                    Condition:
+                                                    <input type="text" name={`resource.differential.element[${index}].condition[${condIndex}]`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].condition[${condIndex}]`)} />
+                                                </label>
+                                                <button type="button" onClick={() => removeConditionFromDifferential(index, condIndex)}>Remove Condition</button>
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={() => addConditionToDifferential(index)}>Add Condition</button>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>Constraints</legend>
+                                        {element.constraint.map((constr, constrIndex) => (
+                                            <div key={constrIndex}>
+                                                <label>
+                                                    Key:
+                                                    <input type="text" name={`resource.differential.element[${index}].constraint[${constrIndex}].key`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].constraint[${constrIndex}].key`)} />
+                                                </label>
+                                                <label>
+                                                    Severity:
+                                                    <input type="text" name={`resource.differential.element[${index}].constraint[${constrIndex}].severity`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].constraint[${constrIndex}].severity`)} />
+                                                </label>
+                                                <label>
+                                                    Human:
+                                                    <input type="text" name={`resource.differential.element[${index}].constraint[${constrIndex}].human`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].constraint[${constrIndex}].human`)} />
+                                                </label>
+                                                <label>
+                                                    Expression:
+                                                    <input type="text" name={`resource.differential.element[${index}].constraint[${constrIndex}].expression`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].constraint[${constrIndex}].expression`)} />
+                                                </label>
+                                                <label>
+                                                    XPath:
+                                                    <input type="text" name={`resource.differential.element[${index}].constraint[${constrIndex}].xpath`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].constraint[${constrIndex}].xpath`)} />
+                                                </label>
+                                                <label>
+                                                    Source:
+                                                    <input type="text" name={`resource.differential.element[${index}].constraint[${constrIndex}].source`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].constraint[${constrIndex}].source`)} />
+                                                </label>
+                                                <button type="button" onClick={() => removeConstraintFromDifferential(index, constrIndex)}>Remove Constraint</button>
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={() => addConstraintToDifferential(index)}>Add Constraint</button>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>Mapping</legend>
+                                        {element.mapping.map((map, mapIndex) => (
+                                            <div key={mapIndex}>
+                                                <label>
+                                                    Identity:
+                                                    <input type="text" name={`resource.differential.element[${index}].mapping[${mapIndex}].identity`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].mapping[${mapIndex}].identity`)} />
+                                                </label>
+                                                <label>
+                                                    Map:
+                                                    <input type="text" name={`resource.differential.element[${index}].mapping[${mapIndex}].map`} onChange={(e) => handleNestedChange(e, `resource.differential.element[${index}].mapping[${mapIndex}].map`)} />
+                                                </label>
+                                                <button type="button" onClick={() => removeMappingFromDifferential(index, mapIndex)}>Remove Mapping</button>
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={() => addMappingToDifferential(index)}>Add Mapping</button>
+                                    </fieldset>
+
+                                    <button type="button" onClick={() => removeElementFromDifferential(index)}>Remove Element</button>
+                                </fieldset>
+                            </div>
+                        ))}
+                        <button type="button" onClick={addElementToDifferential}>Add Element</button>
+                    </fieldset>
+                </fieldset>
+                <button type="submit">Submit Form</button>
             </form>
         </div>
     );
 };
 
 export default AddResources;
+
