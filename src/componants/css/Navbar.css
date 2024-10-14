@@ -1,0 +1,31 @@
+/* Navbar.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #4CAF50;
+    /* Changed to your specified color */
+    color: #F5F5F5;
+    /* Changed text color to match your color code */
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar-links a {
+    color: #F5F5F5;
+    /* Keep link color consistent */
+    text-decoration: none;
+    /* Remove all text decoration */
+    transition: color 0.3s;
+    /* Smooth transition for hover effect */
+}
+
+.navbar-links a:hover {
+    color: black;
+    font-weight: 700;
+    /* Change color on hover */
+}

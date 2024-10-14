@@ -411,7 +411,7 @@ const AddResources = () => {
             <form onSubmit={handleSubmit} className="">
                 <label>
                     Full URL:
-                    <input type="text" name="fullUrl" onChange={handleChange} />
+                    <input type="text" name="fullUrl" onChange={handleChange} required />
                 </label>
                 <fieldset>
                     <legend>Resource</legend>

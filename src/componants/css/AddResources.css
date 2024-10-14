@@ -43,7 +43,8 @@ label {
 
 /* Input Styling */
 input[type="text"] {
-    width: 100%;
+    width: calc(100% - 22px);
+    /* Adjust width for padding and border */
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
