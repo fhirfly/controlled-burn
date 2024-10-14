@@ -93,7 +93,7 @@ const EditResourceDetails = ({ selectedType, fhirData }) => {
             });
     };
 
-    if (!selectedType) return <p>Please select a data type to view details.</p>;
+    if (!selectedType) return <h2 style={{ textAlign: "center" }}>Please select a metadata item from the left sidebar to edit its details.</h2>;
 
     return (
         <div className="details">

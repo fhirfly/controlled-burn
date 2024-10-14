@@ -1,31 +1,92 @@
-/* Navbar.css */
 .navbar {
+    background-color: #0056b3;
+    color: #F5F5F5;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background-color: #4CAF50;
-    /* Changed to your specified color */
-    color: #F5F5F5;
-    /* Changed text color to match your color code */
+    width: 100%;
 }
 
+.navbar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.navbar-toggle {
+    background-color: transparent;
+    border: none;
+    color: #F5F5F5;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+}
+
+/* Links */
 .navbar-links {
     display: flex;
-    gap: 1rem;
+    flex-direction: row;
+    align-items: center;
 }
 
 .navbar-links a {
     color: #F5F5F5;
-    /* Keep link color consistent */
     text-decoration: none;
-    /* Remove all text decoration */
-    transition: color 0.3s;
-    /* Smooth transition for hover effect */
+    border: 1px solid #F5F5F5;
+    border-radius: 5px;
+    padding: 6px 12px;
+    margin-left: 10px;
+    white-space: nowrap;
+    transition: color 0.3s, background-color 0.3s, border-color 0.3s;
 }
 
 .navbar-links a:hover {
     color: black;
-    font-weight: 700;
-    /* Change color on hover */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: black;
+}
+
+@media (max-width: 991px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar-links.open {
+        display: flex;
+    }
+
+    .navbar-links a {
+        margin: 5px 0;
+        text-align: left;
+        width: calc(100% - 20px);
+    }
 }

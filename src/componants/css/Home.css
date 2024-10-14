@@ -1,7 +1,6 @@
 .home-app {
     display: grid;
     grid-template-columns: 1fr;
-    /* First column remains unchanged */
     grid-template-rows: auto auto;
     font-weight: 400;
     gap: 20px;
@@ -19,7 +18,6 @@
     margin: 10px 0;
     color: #fff;
     background-color: #007bff;
-    /* Button color */
     border: none;
     border-radius: 5px;
     text-decoration: none;
@@ -37,6 +35,7 @@
     border-bottom: 5px solid #007bff;
     /* Highlight effect */
     border-radius: 5px;
+    padding-bottom: 8px;
 }
 
 .welcome-section {
@@ -46,32 +45,25 @@
 
 .welcome-section h2 {
     color: #007bff;
-    /* Same blue as first column for consistency */
 }
 
 .welcome-section h3 {
-    color: #0056b3;
-    /* Slightly darker blue for contrast */
+    color: #007bff;
 }
 
 .welcome-section p {
     line-height: 1.6;
-    /* Improve readability */
     color: #333;
-    /* Dark gray for paragraph text */
 }
 
-/* Responsive grid settings */
 @media (min-width: 768px) {
     .home-app {
         grid-template-columns: 1fr 2fr;
-        /* 1:2 ratio for medium devices */
     }
 }
 
 @media (min-width: 992px) {
     .home-app {
         grid-template-columns: 1fr 3fr;
-        /* 1:3 ratio for large devices */
     }
 }

@@ -1,16 +1,16 @@
-
-import React, { useState } from 'react';
-import jsonData from '../../testData/r4b/profiles-types.json';  // Import the JSON file
-
-import '../css/FhirApp.css'; // Import the CSS file
-
+import React, { useState, useRef } from 'react';
+import jsonData from '../../testData/r4b/profiles-types.json';
+import '../css/FhirApp.css';
 import Sidebar from './Sidebar';
 import ResourceDetails from './ResourceDetails';
 
 const FhirAppHome = () => {
     const [selectedType, setSelectedType] = useState('');
 
-    // Extract FHIR resource types from the JSON file
+
+    const detailsRef = useRef(null);
+
+
     const extractDataTypes = () => {
         return jsonData.entry.map(entry => entry.resource.id);
     };
@@ -23,16 +23,28 @@ const FhirAppHome = () => {
         return entry ? entry.resource : {};
     };
 
+    // Handle sidebar item selection
+    const handleSelectType = (type) => {
+        setSelectedType(type);
+
+
+        if (detailsRef.current) {
+            detailsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <>
-            <h1 style={{ textAlign: "center", color: "2196F3" }}>FHIR Editor Application</h1>
+            <h1 style={{ textAlign: "center", color: "#0056b3" }}>View a FHIR Resource</h1>
 
             <div className="fhir-app">
-                <Sidebar dataTypes={fhirDataTypes} onSelectType={setSelectedType} />
-                <ResourceDetails
-                    selectedType={selectedType}
-                    fhirData={getTypeDetails(selectedType)}
-                />
+                <Sidebar dataTypes={fhirDataTypes} onSelectType={handleSelectType} />
+                <div className='details-background' ref={detailsRef}> {/* Attach the ref here */}
+                    <ResourceDetails
+                        selectedType={selectedType}
+                        fhirData={getTypeDetails(selectedType)}
+                    />
+                </div>
             </div>
         </>
     );

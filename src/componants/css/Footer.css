@@ -1,0 +1,9 @@
+.footer-container {
+    background-color: #0056b3;
+}
+
+.footer-text {
+    color: wheat;
+    padding: 2.5rem;
+    line-height: 1.6;
+}

@@ -1,7 +1,4 @@
-/* FhirApp.css */
-
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #F5F5F5;
@@ -10,37 +7,23 @@ body {
 .fhir-app {
     display: grid;
     grid-template-columns: 1fr;
-    /* Full width for small screens */
     grid-template-rows: auto;
     gap: 20px;
     padding: 20px;
 }
 
-@media (min-width: 768px) {
-
-    /* Medium devices */
-    .fhir-app {
-        grid-template-columns: 1fr 2fr;
-        /* 1:2 ratio */
-    }
+.details-background {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 992px) {
-
-    /* Large devices */
-    .fhir-app {
-        grid-template-columns: 1fr 3fr;
-        /* 1:3 ratio */
-    }
-}
 
 .sidebar {
-    background-color: #4CAF50;
-    /* Primary Color */
+    background-color: #007bff;
     padding: 20px;
     border-radius: 8px;
     transition: transform 0.3s ease;
-    /* Animation for hover */
 }
 
 .sidebar h3 {
@@ -57,14 +40,13 @@ body {
     padding: 10px 15px;
     color: white;
     cursor: pointer;
+    font-weight: 400;
     transition: background-color 0.3s;
-    /* Smooth background change */
 }
 
 .sidebar li:hover {
-    background-color: #2196F3;
+    background-color: #0056b3;
     transform: scale(1.2);
-    /* Secondary Color on hover */
 }
 
 .details {
@@ -72,9 +54,26 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
+
 
 .details h3 {
     color: #2196F3;
-    /* Secondary Color for headings */
+}
+
+@media (min-width: 768px) {
+
+    .fhir-app {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .fhir-app {
+        grid-template-columns: 1fr 3fr;
+    }
 }

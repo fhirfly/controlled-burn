@@ -6,6 +6,8 @@ import EditResource from './componants/jsx/EditResource';
 import AddResources from './componants/jsx/AddResources';
 import Navbar from './componants/jsx/Navbar';
 import Home from './componants/jsx/Home';
+import Footer from './componants/jsx/Footer';
+import NotFound from './componants/jsx/NotFound';
 
 function App() {
     return (
@@ -13,10 +15,13 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/view-resource" element={<FhirAppHome />} />
                 <Route path="/edit-resource" element={<EditResource />} />
                 <Route path="/add-resource" element={<AddResources />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
+            <Footer />
         </Router>
     );
 }

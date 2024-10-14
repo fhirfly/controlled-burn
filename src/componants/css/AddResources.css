@@ -5,10 +5,14 @@
     background-color: #fafafa;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-family: 'Arial', sans-serif;
 }
 
-/* Fieldset Styling */
+.add-resource-heading {
+    color: #0056b3;
+    text-align: center;
+
+}
+
 fieldset {
     margin-bottom: 20px;
     padding: 15px;
@@ -17,7 +21,6 @@ fieldset {
     background-color: #fdfdfd;
 }
 
-/* Nested fieldsets */
 fieldset fieldset {
     border: 1px solid #bbb;
     background-color: #f7f7f7;
@@ -26,14 +29,12 @@ fieldset fieldset {
     margin-top: 10px;
 }
 
-/* Legend Styling */
 legend {
     font-weight: bold;
     font-size: 1rem;
     color: #444;
 }
 
-/* Label Styling */
 label {
     display: block;
     margin: 10px 0 5px;
@@ -41,7 +42,6 @@ label {
     color: #333;
 }
 
-/* Input Styling */
 input[type="text"] {
     width: calc(100% - 22px);
     /* Adjust width for padding and border */
@@ -59,11 +59,10 @@ input[type="text"]:focus {
     outline: none;
 }
 
-/* Submit Button Styling */
 button[type="submit"] {
     width: 100%;
     padding: 14px;
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 6px;
@@ -73,10 +72,9 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #218838;
+    background-color: #0056b3;
 }
 
-/* Other Buttons (Add, Remove) */
 button {
     padding: 8px 12px;
     background-color: #007bff;
@@ -86,7 +84,6 @@ button {
     cursor: pointer;
     font-size: 14px;
     margin: 10px;
-    /* Margin on all sides for spacing */
 }
 
 button:hover {
