@@ -6,19 +6,19 @@
 
 .heading {
     font-size: 72px;
-    color: #ff4c4c;
+    color: #007bff;
     margin: 20px 0;
 }
 
 .message {
     font-size: 24px;
-    color: #555;
+    color: #007bff;
 }
 
 .homeLink {
     margin-top: 20px;
     display: inline-block;
     text-decoration: none;
-    color: #007bff;
+    color: #0056b3;
     font-size: 18px;
 }

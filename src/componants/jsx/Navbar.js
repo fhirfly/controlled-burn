@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Navbar.css';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import fhirlylogo from '../../testData/fhirlylogo.png'
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -13,7 +14,12 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-container">
                 <div className="navbar-header">
-                    <div className="navbar-brand">FHIR Editor Application</div>
+                    <div className="navbar-brand">
+                        <div className='logoflex'>
+                            <img src={fhirlylogo} className='responsive-image' alt="FHIR Editor Logo" />
+                            <p>FHIR Editor Application </p>
+                        </div>
+                    </div>
                     <button className="navbar-toggle" onClick={toggleMenu}>
                         {isOpen ? <FaTimes /> : <FaBars />}
                     </button>

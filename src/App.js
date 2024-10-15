@@ -9,6 +9,8 @@ import Home from './componants/jsx/Home';
 import Footer from './componants/jsx/Footer';
 import NotFound from './componants/jsx/NotFound';
 
+import './componants/css/App.css'
+
 function App() {
     return (
         <Router>

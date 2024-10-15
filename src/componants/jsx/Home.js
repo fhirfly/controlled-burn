@@ -16,7 +16,7 @@ const Home = () => {
                 </div>
                 <div >
                     <div className='welcome-section'>
-                        <h2>Welcome to the FHIR Editor Application </h2>
+                        <h2>Welcome to the FHIRLY FHIR Editor Application </h2>
                         <h3>MIT License</h3>
                         <h3>Copyright © 2024 FHIRFLY</h3>
                         <hr />
