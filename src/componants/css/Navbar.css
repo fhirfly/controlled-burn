@@ -1,0 +1,116 @@
+.navbar {
+    background-color: #0056b3;
+    color: #F5F5F5;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navbar-brand {
+    font-size: 1.2rem;
+}
+
+.navbar-toggle {
+    background-color: transparent;
+    border: none;
+    color: #F5F5F5;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+}
+
+/* Links */
+.navbar-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-links a {
+    color: #F5F5F5;
+    text-decoration: none;
+    border: 1px solid #F5F5F5;
+    border-radius: 5px;
+    padding: 6px 12px;
+    margin-left: 10px;
+    white-space: nowrap;
+    transition: color 0.3s, background-color 0.3s, border-color 0.3s;
+}
+
+.navbar-links a:hover {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: black;
+}
+
+.logoflex {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.responsive-image {
+    max-width: 50px;
+    height: auto;
+    object-fit: contain;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.logoflex p {
+    margin: 0;
+    line-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 991px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar-links.open {
+        display: flex;
+    }
+
+    .navbar-links a {
+        margin: 5px 0;
+        text-align: left;
+        width: calc(100% - 20px);
+    }
+}
